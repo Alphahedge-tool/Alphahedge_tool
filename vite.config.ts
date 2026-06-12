@@ -4,6 +4,8 @@ import { createRequire } from 'node:module'
 import { access, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const MTM_ROOT = path.resolve(process.env.MTM_ROOT ?? 'data/mtm-analyzer')
 const MTM_DATA_DIR = path.join(MTM_ROOT, 'data')
 const PARQUET_DIR = path.join(MTM_DATA_DIR, 'parquet')
@@ -148,7 +150,7 @@ function findTimeColumn(columns: string[]) {
   return columns.find(column => /^(time|timestamp|datetime|date\s*time)$/i.test(column.trim()))
     || columns.find(column => /time|timestamp|datetime/i.test(column))
     || columns.find(column => /^date$/i.test(column.trim()))
-    || columns.find(column => /date/i.test(column))
+    || columns.find(column => /date/i.test(column));
 }
 
 function inferUploadDate(columns: string[], rows: Record<string, string>[]) {
@@ -225,7 +227,7 @@ async function listMtmDates() {
     .map(file => file.match(/^mtm-(\d{4}-\d{2}-\d{2})\.parquet$/)?.[1])
     .filter((date): date is string => Boolean(date))
     .sort()
-    .reverse()
+    .reverse();
 }
 
 async function journalDatePayload(date: string) {
@@ -471,11 +473,11 @@ async function latestLogDate() {
     .map(file => file.match(/^logs-(\d{4}-\d{2}-\d{2})\.parquet$/)?.[1])
     .filter((date): date is string => Boolean(date))
     .sort()
-    .at(-1) ?? ''
+    .at(-1) ?? '';
 }
 
 async function logsPayload(date?: string | null, strategy?: string | null) {
-  const selectedDate = date || await latestLogDate()
+  const selectedDate = date || (await latestLogDate())
   if (!selectedDate) return { columns: [], rows: [], meta: { fileName: '', date: '', rows: 0 } }
 
   const filePath = path.join(LOGS_DIR, `logs-${selectedDate}.parquet`)
@@ -517,7 +519,7 @@ async function latestSpotIvDate() {
     .map(file => file.match(/^spot-iv-(\d{4}-\d{2}-\d{2})\.parquet$/)?.[1])
     .filter((date): date is string => Boolean(date))
     .sort()
-    .at(-1) ?? ''
+    .at(-1) ?? '';
 }
 
 async function listSpotIvDates() {
@@ -525,11 +527,11 @@ async function listSpotIvDates() {
   return files
     .map(file => file.match(/^spot-iv-(\d{4}-\d{2}-\d{2})\.parquet$/)?.[1])
     .filter((date): date is string => Boolean(date))
-    .sort()
+    .sort();
 }
 
 async function spotIvPayload(date?: string | null) {
-  const selectedDate = date || await latestSpotIvDate()
+  const selectedDate = date || (await latestSpotIvDate())
   if (!selectedDate) return { columns: [], rows: [], meta: { fileName: '', date: '', rows: 0 } }
 
   const filePath = path.join(SPOT_IV_DIR, `spot-iv-${selectedDate}.parquet`)
@@ -898,7 +900,7 @@ function journalApiPlugin() {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), journalApiPlugin()],
+  plugins: [react(), journalApiPlugin(), cloudflare()],
   server: {
     proxy: {
       '/api/auth': {
