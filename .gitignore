@@ -1,0 +1,22 @@
+node_modules/
+dist/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and caches
+*.log
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Editor and tooling
+.vscode/
+.idea/
