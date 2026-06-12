@@ -4,13 +4,14 @@ import { createRequire } from 'node:module'
 import { access, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
-const MTM_ROOT = 'D:\\mtm-analyzer'
-const PARQUET_DIR = 'D:\\mtm-analyzer\\data\\parquet'
-const MTM_CSV_FILE = 'D:\\mtm-analyzer\\data\\mtm.csv'
-const MTM_META_FILE = 'D:\\mtm-analyzer\\data\\meta.json'
-const LOGS_DIR = 'D:\\mtm-analyzer\\data\\logs'
-const SPOT_IV_DIR = 'D:\\mtm-analyzer\\data\\spot-iv'
-const analyzerRequire = createRequire(path.join(MTM_ROOT, 'package.json'))
+const MTM_ROOT = path.resolve(process.env.MTM_ROOT ?? 'data/mtm-analyzer')
+const MTM_DATA_DIR = path.join(MTM_ROOT, 'data')
+const PARQUET_DIR = path.join(MTM_DATA_DIR, 'parquet')
+const MTM_CSV_FILE = path.join(MTM_DATA_DIR, 'mtm.csv')
+const MTM_META_FILE = path.join(MTM_DATA_DIR, 'meta.json')
+const LOGS_DIR = path.join(MTM_DATA_DIR, 'logs')
+const SPOT_IV_DIR = path.join(MTM_DATA_DIR, 'spot-iv')
+const analyzerRequire = createRequire(import.meta.url)
 
 type SpotIvJson = {
   data?: {
