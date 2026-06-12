@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
+import { API_BASE } from './config'
 
 type Theme = 'dark' | 'light'
 type Step = 'start' | 'otp' | 'totp' | 'mpin' | 'success'
@@ -103,7 +104,6 @@ type RollingStraddleResponse = {
 }
 
 const SESSION_KEY = 'alpha-desk.session'
-const API_BASE = ''
 const LOT_SIZE: Record<string, number> = { NIFTY: 75, BANKNIFTY: 30, FINNIFTY: 40, MIDCPNIFTY: 120 }
 const MARKET_OPEN_MINUTES = 9 * 60 + 15
 const MARKET_CLOSE_MINUTES = 15 * 60 + 30

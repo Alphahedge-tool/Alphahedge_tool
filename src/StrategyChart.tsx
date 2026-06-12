@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import InhouseStrategyChart, { type InhouseSeries } from './InhouseStrategyChart'
+import { apiPath } from './config'
 import './strategy-chart.css'
 
 type Exchange = 'NSE' | 'BSE' | 'MCX'
@@ -373,7 +374,7 @@ export default function StrategyChart({ session, onBack }: StrategyChartProps) {
     setError('')
     setChainMeta(null)
 
-    fetch('/api/market/option-chain', {
+    fetch(apiPath('/api/market/option-chain'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, { exchange, instrument, ...(expiry ? { expiry } : {}) }),
@@ -444,7 +445,7 @@ export default function StrategyChart({ session, onBack }: StrategyChartProps) {
     setLivePoint(null)
     setLiveStatus(isCustom ? 'Loaded' : 'Connecting')
 
-    fetch('/api/market/rolling-straddle', {
+    fetch(apiPath('/api/market/rolling-straddle'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, {
@@ -490,7 +491,7 @@ export default function StrategyChart({ session, onBack }: StrategyChartProps) {
     setIvSkewMeta(null)
     setLivePoint(null)
     setLiveStatus('Loaded')
-    fetch('/api/market/rolling-iv', {
+    fetch(apiPath('/api/market/rolling-iv'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, { exchange, instrument, expiry, interval }),
@@ -522,7 +523,7 @@ export default function StrategyChart({ session, onBack }: StrategyChartProps) {
     setChart(null)
     setLivePoint(null)
     setLiveStatus('Loaded')
-    fetch('/api/market/iv-skew', {
+    fetch(apiPath('/api/market/iv-skew'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, { exchange, instrument, expiry, interval }),
@@ -565,7 +566,7 @@ export default function StrategyChart({ session, onBack }: StrategyChartProps) {
     const endDate = shiftDays(oldestDate, -1)
     const startDate = shiftDays(oldestDate, -8)
     setLoadingMore(true)
-    fetch('/api/market/rolling-straddle', {
+    fetch(apiPath('/api/market/rolling-straddle'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, {

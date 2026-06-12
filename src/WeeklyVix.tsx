@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import InhouseStrategyChart from './InhouseStrategyChart'
+import { apiPath } from './config'
 
 type Exchange = 'NSE' | 'BSE'
 
@@ -110,7 +111,7 @@ export default function WeeklyVix({ session, onBack }: WeeklyVixProps) {
     if (!session || session.is_demo || !instrument) return
     let cancelled = false
     setLoadingExpiry(true)
-    fetch('/api/market/option-chain', {
+    fetch(apiPath('/api/market/option-chain'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, { exchange, instrument }),
@@ -140,7 +141,7 @@ export default function WeeklyVix({ session, onBack }: WeeklyVixProps) {
     setLiveVix(null)
     setLiveStatus('Loading exact')
 
-    fetch('/api/market/weekly-vix', {
+    fetch(apiPath('/api/market/weekly-vix'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody(session, { exchange, instrument, interval }),
@@ -171,7 +172,7 @@ export default function WeeklyVix({ session, onBack }: WeeklyVixProps) {
     let cancelled = false
     const pollMs = Math.max(10_000, Math.min(30_000, intervalSeconds[interval] * 500))
     const pollExactVix = () => {
-      fetch('/api/market/weekly-vix', {
+      fetch(apiPath('/api/market/weekly-vix'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: requestBody(session, { exchange, instrument, interval }),
